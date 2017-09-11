@@ -48,9 +48,9 @@ int main(int argc, char* argv[])
 
 	ndnHelper.InstallAll();
 
-	ns3::ndn::StrategyChoiceHelper::InstallAll("/", "/localhost/nfd/strategy/best-route");
+	ns3::ndn::StrategyChoiceHelper::InstallAll("/myprefix", "/localhost/nfd/strategy/best-route");
 
-	ParameterConfiguration::getInstance()->setParameter("PREFIX_COMPONENT", 0); // set to prefix componen
+	//ParameterConfiguration::getInstance()->setParameter("PREFIX_COMPONENT", 0); // set to prefix componen
 
 	//install consumer
 	ns3::ndn::AppHelper consumerVideoHelper("ns3::ndn::FileConsumerCbr::MultimediaConsumer");
@@ -62,21 +62,21 @@ int main(int argc, char* argv[])
 	consumerVideoHelper.SetAttribute("AdaptationLogic", StringValue("dash::player::SVCBufferBasedAdaptationLogic"));
 	consumerVideoHelper.SetAttribute("MaxBufferedSeconds", UintegerValue(50));
 	consumerVideoHelper.SetAttribute("TraceNotDownloadedSegments", BooleanValue(true));
-	consumerVideoHelper.SetAttribute("StartUpDelay", DoubleValue(2.0));
-	consumerVideoHelper.SetAttribute ("LifeTime", StringValue("1s"));
+	consumerVideoHelper.SetAttribute("StartUpDelay", DoubleValue(0.1));
+	//consumerVideoHelper.SetAttribute ("LifeTime", StringValue("1s"));
 
-	std::string mpd("/home/someuser/multimediaData/SVC/BBB-III.mpd");
+	std::string mpd("/myprefix/SVC/BBB-III.mpd");
 	consumerVideoHelper.SetAttribute("MpdFileToRequest", StringValue(mpd.c_str()));
 	
 	ApplicationContainer consumer = consumerVideoHelper.Install (routers.Get (0));
-	consumer.Start (Seconds(r->GetInteger (0,3)));
-	consumer.Stop (Seconds(simTime));
+	//consumer.Start (Seconds(r->GetInteger (0,3)));
+	//consumer.Stop (Seconds(simTime));
 
-	ns3::ndn::DASHPlayerTracer::Install(routers.Get(0),"dash-output.txt");
+	//ns3::ndn::DASHPlayerTracer::Install(routers.Get(0),"dash-output.txt");
 	
 	//install global routing interface on all nodes
 	ns3::ndn::ExtendedGlobalRoutingHelper ndnGlobalRoutingHelper;
-	ndnGlobalRoutingHelper.InstallAll ();
+	ndnGlobalRoutingHelper.InstallAll();
 	
 	//install producer application on the provider
 	ns3::ndn::AppHelper videoProducerHelper ("ns3::ndn::FileServer");
@@ -84,11 +84,13 @@ int main(int argc, char* argv[])
 	videoProducerHelper.SetAttribute("ContentDirectory", StringValue("/home/someuser/multimediaData/"));
 
 	Ptr<Node> producer = Names::Find<Node>("Node8");
+	videoProducerHelper.Install(producer);
 	ndnGlobalRoutingHelper.AddOrigins("/myprefix",producer);
 
 	ns3::ndn::GlobalRoutingHelper::CalculateAllPossibleRoutes ();
 	ns3::ndn::CsTracer::InstallAll("cs-trace.txt", Seconds(1));
-	
+	ns3::ndn::DASHPlayerTracer::InstallAll("dash-output.txt");
+	ns3::ndn::L3RateTracer::InstallAll("rate-output.txt");	
 	Simulator::Stop (Seconds(simTime+1));
 	Simulator::Run();
 	Simulator::Destroy();
