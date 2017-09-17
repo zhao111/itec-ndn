@@ -13,12 +13,13 @@ int main(int argc, char* argv[])
 {
 	ns3::Config::SetDefault("ns3::PointToPointNetDevice::Mtu", StringValue("4096"));
 
-	std::string outputFolder = "output/";
+//	std::string outputFolder = "/home/ndnSIM/zhaoxixi-ndn/output/test1/";
+//	fprintf(stderr,outputFolder.c_str());
 	std::string strategy = "bestRoute";
 	std::string topologyFile = "topologies/topo-grid-3x3.top";
 	
 	CommandLine cmd;
-	cmd.AddValue ("outputFolder", "defines specific output subdir", outputFolder);
+//	cmd.AddValue ("outputFolder", "defines specific output subdir", outputFolder);
 	cmd.AddValue ("topology", "path to the required topology file", topologyFile);
 	cmd.AddValue ("fw-strategy", "Forwarding Strategy", strategy);
 	cmd.Parse (argc, argv);
@@ -88,9 +89,15 @@ int main(int argc, char* argv[])
 	ndnGlobalRoutingHelper.AddOrigins("/myprefix",producer);
 
 	ns3::ndn::GlobalRoutingHelper::CalculateAllPossibleRoutes ();
-	ns3::ndn::CsTracer::InstallAll("cs-trace.txt", Seconds(1));
-	ns3::ndn::DASHPlayerTracer::InstallAll("dash-output.txt");
-	ns3::ndn::L3RateTracer::InstallAll("rate-output.txt");	
+//	for(int i=0; i<routers.size();i++)
+//	{
+//		ns3::ndn::CsTracer::Install(routers.Get (i), std::string(outputFolder +"/cs-trace_" + boost::lexical_cast<std::string>(i)).append(".txt"));
+//		ns3::ndn::DASHPlayerTracer::Install(routers.Get (i), std::string(outputFolder +"/dash-trace_" + boost::lexical_cast<std::string>(i)).append(".txt"));	
+//		ns3::ndn::L3RateTracer::Install(routers.Get (i), std::string(outputFolder +"/rate-trace_" + boost::lexical_cast<std::string>(i)).append(".txt"));
+//	}	
+	ns3::ndn::CsTracer::InstallAll("./output/test1/cs-trace.txt", Seconds(1));
+	ns3::ndn::DASHPlayerTracer::InstallAll("./output/test1/dash-output.txt");
+	ns3::ndn::L3RateTracer::InstallAll("./output/test1/rate-output.txt");
 	Simulator::Stop (Seconds(simTime+1));
 	Simulator::Run();
 	Simulator::Destroy();
