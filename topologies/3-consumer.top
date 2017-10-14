@@ -1,0 +1,27 @@
+router
+
+Streamer0	NA	5	5
+Streamer1   NA  5   10
+Streamer2   NA  5   25
+
+Router0	NA	10	5
+Router1	NA	10	10
+Router2	NA	10	25
+
+RouterNet	NA	30	15
+
+Source	NA	40	15
+
+link
+
+Router0	Streamer0	3Mbps	1	1ms	20
+Router1 Streamer1   3Mbps   1   1ms 20
+Router2 Streamer2   3Mbps   1   1ms 20
+
+Router0	Router1	100Mbps	1	1ms	20
+Router2	Router1	100Mbps	1	1ms	20
+
+Router0	RouterNet	100Mbps	1	10ms	20
+Router2	RouterNet	100Mbps	1	20ms	20
+
+RouterNet	Source	100Mbps	1	1ms	20
