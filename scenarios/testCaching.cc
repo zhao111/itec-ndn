@@ -13,15 +13,12 @@ int main(int argc, char* argv[])
 {
 	ns3::Config::SetDefault("ns3::PointToPointNetDevice::Mtu", StringValue("4096"));
 
-//	std::string outputFolder = "/home/ndnSIM/zhaoxixi-ndn/output/test1/";
-//	fprintf(stderr,outputFolder.c_str());
-	std::string outputFolder = "output/";
+	std::string outputFolder = "output/testCaching/Fifo_10";
 	std::string strategy = "bestRoute";
-//	std::string topologyFile = "topologies/3-consumer.top";
-	std::string topologyFile = "topologies/saf_scenario.top";
+	std::string topologyFile = "/home/ndnSIM/zhaoxixi-ndn/topologies/3-consumer.top";
 
 	CommandLine cmd;
-//	cmd.AddValue ("outputFolder", "defines specific output subdir", outputFolder);
+	cmd.AddValue ("outputFolder", "defines specific output subdir", outputFolder);
 	cmd.AddValue ("topology", "path to the required topology file", topologyFile);
 	cmd.AddValue ("fw-strategy", "Forwarding Strategy", strategy);
 	cmd.Parse (argc, argv);
@@ -44,13 +41,13 @@ int main(int argc, char* argv[])
 		router =  Names::Find<Node>(nodeNamePrefix +  boost::lexical_cast<std::string>(nodeIndex++));
 	}
 	//check # of nodes
-	fprintf(stderr,"%d",routers.size());
+	fprintf(stderr,"router number: %d \n",routers.size());
 
 	nodeIndex = 0;
 	nodeNamePrefix = std::string("RouterNet");
 	router = Names::Find<Node>(nodeNamePrefix);
 	routers.Add (router);
-	fprintf(stderr,"%d",routers.size());
+	fprintf(stderr,"router+routernet %d \n",routers.size());
 
 	NodeContainer streamers;
 	nodeIndex = 0;
@@ -73,10 +70,14 @@ int main(int argc, char* argv[])
 //    fprintf(stderr, "Parsed %d VideoSource\n", source.size ());
 	
 	ns3::ndn::StackHelper ndnHelper;
-	ndnHelper.SetOldContentStore("ns3::ndn::cs::Lru", "MaxSize","100"); // default ContentStore parameters
+	ndnHelper.SetOldContentStore("ns3::ndn::cs::Fifo", "MaxSize","10"); // default ContentStore parameters
 
 	ndnHelper.Install(routers);
-	ndnHelper.Install(streamers);
+	
+	ns3::ndn::StackHelper no_cache_ndnHelper;
+	no_cache_ndnHelper.setCsSize(1);
+	no_cache_ndnHelper.Install(streamers);
+
 	ndnHelper.Install(producer);
 
 	ns3::ndn::StrategyChoiceHelper::Install((routers),"/myprefix", "/localhost/nfd/strategy/best-route");
@@ -124,15 +125,13 @@ int main(int argc, char* argv[])
 	ndnGlobalRoutingHelper.AddOrigins("/myprefix",producer);
 
 	ns3::ndn::GlobalRoutingHelper::CalculateAllPossibleRoutes ();
-//	for(int i=0; i<routers.size();i++)
-//	{
-//		ns3::ndn::CsTracer::Install(routers.Get (i), std::string(outputFolder +"/cs-trace_" + boost::lexical_cast<std::string>(i)).append(".txt"));
-//		ns3::ndn::DASHPlayerTracer::Install(routers.Get (i), std::string(outputFolder +"/dash-trace_" + boost::lexical_cast<std::string>(i)).append(".txt"));	
-//		ns3::ndn::L3RateTracer::Install(routers.Get (i), std::string(outputFolder +"/rate-trace_" + boost::lexical_cast<std::string>(i)).append(".txt"));
-//	}	
-//	ns3::ndn::CsTracer::InstallAll("./output/test1/cs-trace.txt", Seconds(1));
-//	ns3::ndn::DASHPlayerTracer::InstallAll("./output/test1/dash-output.txt");
-//	ns3::ndn::L3RateTracer::InstallAll("./output/test1/rate-output.txt");
+
+	for(int i=0; i<routers.size();i++)
+	{
+		ns3::ndn::CsTracer::Install(routers.Get (i), std::string(outputFolder +"/cs-trace_" + boost::lexical_cast<std::string>(i)).append(".txt"));
+		ns3::ndn::L3RateTracer::Install(routers.Get (i), std::string(outputFolder +"/rate-trace_" + boost::lexical_cast<std::string>(i)).append(".txt"));
+	}	
+	
 	Simulator::Stop (Seconds(simTime+1));
 	Simulator::Run();
 	Simulator::Destroy();
