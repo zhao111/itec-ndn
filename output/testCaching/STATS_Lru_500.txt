@@ -6,3 +6,12 @@ Avg.QoE.VideoQuality:808442872.333
 Avg.QoE.QualityVariations:51068351.0
 Avg.QoE.StallingTime:0.0
 
+Total_Costs:488101.0
+Avg_Costs:2.23582628293
+Raw_Kilobytes_Costs:1957911.28946
+AVG_Cost_Per_Kilobyte:2.23577781737
+Total_Transmitted_Kilobytes:875718.183735
+
+Total_Cache_Hits:47417.0
+Total_Cache_Misses:59702.0
+Total_Cache_Hit_Ratio:0.442657231677
