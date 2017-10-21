@@ -1,0 +1,8 @@
+Video_Representation:1.16945373467
+Video_StallingMS:0.0
+Video_SegmentBitrate:2703822.3155
+Video_Switches:17.0
+Avg.QoE.VideoQuality:808442872.333
+Avg.QoE.QualityVariations:51068351.0
+Avg.QoE.StallingTime:0.0
+
