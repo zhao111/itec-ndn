@@ -1,0 +1,17 @@
+Video_Representation:0.239687848384
+Video_StallingMS:0.0
+Video_SegmentBitrate:983648.128205
+Video_Switches:15.3333333333
+Avg.QoE.VideoQuality:294110790.333
+Avg.QoE.QualityVariations:22958952.6667
+Avg.QoE.StallingTime:0.0
+
+Total_Costs:256240.0
+Avg_Costs:2.14591987137
+Raw_Kilobytes_Costs:1018476.55816
+AVG_Cost_Per_Kilobyte:2.14589496048
+Total_Transmitted_Kilobytes:474616.221632
+
+Total_Cache_Hits:1244.0
+Total_Cache_Misses:50340.0
+Total_Cache_Hit_Ratio:0.0241160049628
