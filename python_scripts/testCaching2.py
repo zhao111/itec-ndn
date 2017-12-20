@@ -18,12 +18,13 @@ def generateStats(outputdir):
 	
 	#calc costs
 	total_costs, avg_costs, raw_kilo_bytes_costs, avg_cost_per_kilo_byte, total_kilo_bytes = calcCosts(outputdir)
-	#print costs
+	print calcCosts(outputdir)
 
 	#calc cache stats
 	cache_hits, cache_misses, cache_hit_ratio = calcCacheStats(outputdir)
+	print cache_hit_ratio
 
-	output_file = open(outputdir+"../STATS_Fifo_10.txt", "w")
+	output_file = open(outputdir+"../0.8_video2.txt", "w")
 	output_file.write("Video_Representation:" +str(video_res["Avg.Representation"]) + "\n")
 	output_file.write("Video_StallingMS:" +str(video_res["Avg.StallingMS"]) + "\n")
 	output_file.write("Video_SegmentBitrate:" +str(video_res["Avg.SegmentBitrate"]) + "\n")
@@ -168,7 +169,8 @@ def calcCacheStats(outputdir):
 print "Start"
 SIMULATION_DIR=os.getcwd()
 SIMULATION_OUTPUT = SIMULATION_DIR
-SIMULATION_OUTPUT += "/output/testCaching/Fifo_10/"
+SIMULATION_OUTPUT += "/output/prob/0.8/video2"
 print SIMULATION_OUTPUT
 generateStats(SIMULATION_OUTPUT) 
 print "Finished."
+

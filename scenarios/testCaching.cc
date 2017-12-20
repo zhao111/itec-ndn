@@ -13,9 +13,9 @@ int main(int argc, char* argv[])
 {
 	ns3::Config::SetDefault("ns3::PointToPointNetDevice::Mtu", StringValue("4096"));
 
-	std::string outputFolder = "output/testCaching/Fifo_10";
+	std::string outputFolder = "output/pp/0.2";
 	std::string strategy = "bestRoute";
-	std::string topologyFile = "/home/ndnSIM/zhaoxixi-ndn/topologies/3-consumer.top";
+	std::string topologyFile = "/home/ndnSIM/zhaoxixi-ndn/topologies/5-consumer.top";
 
 	CommandLine cmd;
 	cmd.AddValue ("outputFolder", "defines specific output subdir", outputFolder);
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 	topologyReader.Read();
 
 	Ptr<UniformRandomVariable> r = CreateObject<UniformRandomVariable>();
-	int simTime = 2880;
+	int simTime = 60 ;
 
 	//pharse all nodes
 	NodeContainer routers;
@@ -43,11 +43,11 @@ int main(int argc, char* argv[])
 	//check # of nodes
 	fprintf(stderr,"router number: %d \n",routers.size());
 
-	nodeIndex = 0;
-	nodeNamePrefix = std::string("RouterNet");
-	router = Names::Find<Node>(nodeNamePrefix);
-	routers.Add (router);
-	fprintf(stderr,"router+routernet %d \n",routers.size());
+	//nodeIndex = 0;
+	//nodeNamePrefix = std::string("RouterNet");
+	//router = Names::Find<Node>(nodeNamePrefix);
+	//routers.Add (router);
+	//fprintf(stderr,"router+routernet %d \n",routers.size());
 
 	NodeContainer streamers;
 	nodeIndex = 0;
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 //    fprintf(stderr, "Parsed %d VideoSource\n", source.size ());
 	
 	ns3::ndn::StackHelper ndnHelper;
-	ndnHelper.SetOldContentStore("ns3::ndn::cs::Fifo", "MaxSize","10"); // default ContentStore parameters
+	ndnHelper.SetOldContentStore("ns3::ndn::cs::Probability::Lfu", "MaxSize","2"); // default ContentStore parameters
 
 	ndnHelper.Install(routers);
 	
@@ -139,4 +139,5 @@ int main(int argc, char* argv[])
 	NS_LOG_UNCOND("Simulation Finished.");
 	return 0;
 }
+
 
